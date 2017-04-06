@@ -51,7 +51,8 @@ scores_pos<- mapply(seq_pos_final,FUN=PWMscoreStartingAt,SIMPLIFY=TRUE,  startin
 seq_pos <- seq_pos[apply(FUN=which.max,scores_pos,2) < 150]
 #
 scores_pos <- scores_pos[,apply(FUN=which.max,scores_pos,2) < 150]
-
+#
+pos_pos <- apply(FUN=which.max,scores_pos,2)
 # neg
 #
 scores_ARF_neg <- mapply(seq_neg,FUN=PWMscoreStartingAt,SIMPLIFY=TRUE,  starting.at=mapply(seq,1,width_neg-dim(pwm_ARF)[2],SIMPLIFY=FALSE),MoreArgs=list(pwm=pwm_ARF)) - maxScore(pwm_ARF)
@@ -67,5 +68,16 @@ scores_neg <- mapply(seq_neg_final,FUN=PWMscoreStartingAt,SIMPLIFY=TRUE,  starti
 seq_neg <- seq_neg[apply(FUN=which.max,scores_neg,2) < 150]
 #
 scores_neg <- scores_neg[,apply(FUN=which.max,scores_neg,2) < 150]
+#
+pos_neg <- apply(FUN=which.max,scores_neg,2)
 
+#-------------------------------------retrieve seq after scores---------------------------------------
 
+after_pos_site <-  mapply(str_sub,seq_pos,pos_pos+10,pos_pos+30)
+after_neg_site <-  mapply(str_sub,seq_neg,pos_neg+10,pos_neg+30)
+
+Atracts_pos <- unlist(str_locate(after_pos_site,"AATTAA"))[,1]
+Atracts_neg <- unlist(str_locate(after_neg_site,"AATTAA"))[,1]
+
+list_pos <- Atracts_pos[!is.na(Atracts_pos)]
+list_neg <- Atracts_neg[!is.na(Atracts_neg)]
