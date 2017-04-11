@@ -76,8 +76,19 @@ pos_neg <- apply(FUN=which.max,scores_neg,2)
 after_pos_site <-  mapply(str_sub,seq_pos,pos_pos+10,pos_pos+30)
 after_neg_site <-  mapply(str_sub,seq_neg,pos_neg+10,pos_neg+30)
 
-Atracts_pos <- unlist(str_locate(after_pos_site,"AATTAA"))[,1]
-Atracts_neg <- unlist(str_locate(after_neg_site,"AATTAA"))[,1]
-
-list_pos <- Atracts_pos[!is.na(Atracts_pos)]
-list_neg <- Atracts_neg[!is.na(Atracts_neg)]
+list_motifs <- list('A','AA','AAA','AAAA','T','TT','TTT','TTTT','AT','TA','AAT','TTA','ATT','TAA','AAAT','TTTA','AATT','TTAA','ATTT','TAAA')
+mult_pos <- numeric()
+mult_neg <- numeric()
+for (elt in list_motifs)
+{
+    Atracts_pos <- unlist(str_locate_all(after_pos_site,elt))
+    Atracts_neg <- unlist(str_locate_all(after_neg_site,elt))
+    list_pos <- Atracts_pos[!is.na(Atracts_pos)]  
+    list_neg <- Atracts_neg[!is.na(Atracts_neg)] 
+    mult_pos <- c(mult_pos,length(list_pos)/length(seq_pos))
+    mult_neg <- c(mult_neg,length(list_neg)/length(seq_neg))
+}
+posneg <- cbind(mult_pos,mult_neg)
+rownames(posneg) <- list_motifs
+colnames(posneg) <- c('pos','neg')
+write.table(posneg,"AT_content_10_to_30_bases_after_site.csv",quote=FALSE,sep="\t")
