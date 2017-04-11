@@ -88,7 +88,7 @@ for (elt in list_motifs)
     mult_pos <- c(mult_pos,length(list_pos)/length(seq_pos))
     mult_neg <- c(mult_neg,length(list_neg)/length(seq_neg))
 }
-posneg <- cbind(mult_pos,mult_neg)
+posneg <- round(cbind(mult_pos,mult_neg),4)
 rownames(posneg) <- list_motifs
 colnames(posneg) <- c('pos','neg')
 write.table(posneg,"AT_content_10_to_30_bases_after_site.csv",quote=FALSE,sep="\t")
